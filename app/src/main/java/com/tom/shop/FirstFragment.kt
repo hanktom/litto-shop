@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.tom.shop.databinding.FragmentFirstBinding
 
 /**
@@ -31,7 +34,10 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //RecyclerView
+        binding.recycler.layoutManager = LinearLayoutManager(context)
+        binding.recycler.setHasFixedSize(true)
+        binding.recycler.adapter = CityAdapter()
         binding.buttonFirst.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
@@ -41,4 +47,22 @@ class FirstFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+}
+class CityAdapter : Adapter<CityViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
+        TODO("Not yet implemented")
+    }
+
+    override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getItemCount(): Int {
+        TODO("Not yet implemented")
+    }
+
+}
+
+class CityViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
 }
