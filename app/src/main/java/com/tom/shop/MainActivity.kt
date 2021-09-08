@@ -16,17 +16,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    val requestCamera = registerForActivityResult(RequestPermission()) { granted ->
-        if (granted) {
-            takePhoto()
-        } else {
-
-        }
-    }
-
-    private fun takePhoto() {
-        TODO("Not yet implemented")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
