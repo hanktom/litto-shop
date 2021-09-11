@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,7 @@ import com.tom.shop.databinding.FragmentFirstBinding
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class FirstFragment : Fragment() {
-
+    lateinit var cities : Array<String>
     private var _binding: FragmentFirstBinding? = null
 
     // This property is only valid between onCreateView and
@@ -34,10 +35,28 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        cities = requireContext().resources.getStringArray(R.array.cities)
         //RecyclerView
         binding.recycler.layoutManager = LinearLayoutManager(context)
         binding.recycler.setHasFixedSize(true)
-        binding.recycler.adapter = CityAdapter()
+        binding.recycler.adapter = object : RecyclerView.Adapter<CityViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
+                val view = LayoutInflater.from(context)
+                    .inflate(R.layout.row_city, parent, false)
+                return CityViewHolder(view)
+            }
+
+            override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
+                holder.cityName.text = cities[position]
+            }
+
+            override fun getItemCount(): Int {
+                return cities.size
+            }
+
+        }
+
+
         binding.buttonFirst.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
@@ -48,6 +67,7 @@ class FirstFragment : Fragment() {
         _binding = null
     }
 }
+
 class CityAdapter : Adapter<CityViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
         TODO("Not yet implemented")
@@ -63,6 +83,6 @@ class CityAdapter : Adapter<CityViewHolder>() {
 
 }
 
-class CityViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+class CityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val cityName: TextView = itemView.findViewById(R.id.city_name)
 }
