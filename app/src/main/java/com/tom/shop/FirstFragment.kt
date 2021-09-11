@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.tom.shop.databinding.FragmentFirstBinding
+import kotlinx.coroutines.GlobalScope
 import java.net.URL
 import kotlin.concurrent.thread
 
@@ -22,16 +24,15 @@ class FirstFragment : Fragment() {
     private val TAG = FirstFragment::class.java.simpleName
     lateinit var cities : Array<String>
     private var _binding: FragmentFirstBinding? = null
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    val viewModel: ProductViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
 
@@ -41,16 +42,18 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         cities = requireContext().resources.getStringArray(R.array.cities)
         //Products from web url
-        thread {
+        /*thread {
             val json = URL("https://fakestoreapi.com/products").readText()
             Log.d(TAG, "onViewCreated: JSON $json")
-        }
-
-
+        }*/
         //RecyclerView
         binding.recycler.layoutManager = LinearLayoutManager(context)
         binding.recycler.setHasFixedSize(true)
-        binding.recycler.adapter = object : RecyclerView.Adapter<CityViewHolder>() {
+        viewModel.products.observe(viewLifecycleOwner) {
+            binding.recycler.adapter = ProductAdapter(it)
+        }
+
+        /*binding.recycler.adapter = object : RecyclerView.Adapter<CityViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
                 val view = LayoutInflater.from(context)
                     .inflate(R.layout.row_city, parent, false)
@@ -65,7 +68,7 @@ class FirstFragment : Fragment() {
                 return cities.size
             }
 
-        }
+        }*/
 
 
         binding.buttonFirst.setOnClickListener {
