@@ -8,12 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.room.Room
 import com.tom.shop.databinding.FragmentFirstBinding
+import com.tom.shop.db.ProductDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.net.URL
 import kotlin.concurrent.thread
 
@@ -35,7 +40,6 @@ class FirstFragment : Fragment() {
     ): View? {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,6 +55,11 @@ class FirstFragment : Fragment() {
         binding.recycler.setHasFixedSize(true)
         viewModel.products.observe(viewLifecycleOwner) {
             binding.recycler.adapter = ProductAdapter(it)
+            val db = Room.databaseBuilder(requireContext(),
+                ProductDatabase::class.java, "shop").build()
+            lifecycleScope.launch(Dispatchers.IO) {
+                db.productDao().insert(it[0])
+            }
         }
 
         /*binding.recycler.adapter = object : RecyclerView.Adapter<CityViewHolder>() {
